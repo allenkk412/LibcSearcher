@@ -34,7 +34,9 @@ class LibcSearcher(object):
         res = []
         for name, address in self.condition.items():
             addr_last12 = address & 0xfff
-            res.append(re.compile("^%s .*%x" % (name, addr_last12)))
+            # 保证进行正则匹配的16进制str长度为3，如0x0bc，使用“%x"进行格式化，会变成 bc，少了一个0
+            res.append(re.compile("^%s .*%03x" % (name, addr_last12)))
+            #res.append(re.compile("^%s .*%x" % (name, addr_last12)))
 
         db = self.libc_database_path
         files = []
